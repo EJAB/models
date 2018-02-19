@@ -56,6 +56,7 @@ import vggish_params
 import vggish_postprocess
 import vggish_slim
 
+from sklearn import preprocessing
 np.set_printoptions(threshold=np.inf)
 
 flags = tf.app.flags
@@ -85,7 +86,6 @@ def main(_):
   # the model. If none is provided, we generate a synthetic input.
   if FLAGS.wav_file:
     wav_file = FLAGS.wav_file
-    print(wav_file)
   else:
     # Write a WAV of a sine wav into an in-memory file object.
     num_secs = 5
@@ -123,8 +123,28 @@ def main(_):
                                  feed_dict={features_tensor: examples_batch})
     # print(embedding_batch)
     postprocessed_batch = pproc.postprocess(embedding_batch)
-    print(postprocessed_batch)
+    # print(postprocessed_batch)
     np.save(wav_file + '.npy', postprocessed_batch)
+
+    """saves the numpy array with wav_file.npy name, containing the processed postprocessed_batch"""
+    stuff = preprocessing.normalize(postprocessed_batch, norm='l2', axis=1)
+    sumStuff = np.sum(stuff, axis=0)
+    newArray = np.array(sumStuff)[None, :]
+    finalStuff = preprocessing.normalize(newArray, norm='l2', axis=1)
+    print(wav_file, ": ", finalStuff.shape)
+
+    indexFile = np.load("index.npy")
+    print(indexFile.shape)
+
+    yas = np.append(indexFile, finalStuff, axis=0)
+    print("!!!!!!!!!!!!", yas.shape)
+    np.save("index.npy", yas)
+
+    """filenames.txt contains the names of the audio recordings, so the matching recordings to query is:
+    line in txt = row in npy"""
+    f = open("filenames.txt", "a")
+    f.write(wav_file + "\n")
+    f.close()
 
     # Write the postprocessed embeddings as a SequenceExample, in a similar
     # format as the features released in AudioSet. Each row of the batch of
