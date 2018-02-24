@@ -90,3 +90,9 @@ ENV/
 
 # PyCharm
 .idea/
+
+# Personal data
+.DS_Store
+samples/
+*.wav
+*.wav.npy
