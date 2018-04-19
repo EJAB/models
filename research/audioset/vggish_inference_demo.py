@@ -123,28 +123,26 @@ def main(_):
                                  feed_dict={features_tensor: examples_batch})
     # print(embedding_batch)
     postprocessed_batch = pproc.postprocess(embedding_batch)
-    # print(postprocessed_batch)
+    print(postprocessed_batch)
+    print(len(postprocessed_batch))
+    """saves the numpy array with wav_file.npy name, containing the processed postprocessed_batch"""
     np.save(wav_file + '.npy', postprocessed_batch)
 
-    """saves the numpy array with wav_file.npy name, containing the processed postprocessed_batch"""
-    stuff = preprocessing.normalize(postprocessed_batch, norm='l2', axis=1)
-    sumStuff = np.sum(stuff, axis=0)
-    newArray = np.array(sumStuff)[None, :]
-    finalStuff = preprocessing.normalize(newArray, norm='l2', axis=1)
-    print(wav_file, ": ", finalStuff.shape)
-
-    indexFile = np.load("index.npy")
-    print(indexFile.shape)
-
-    yas = np.append(indexFile, finalStuff, axis=0)
-    print("!!!!!!!!!!!!", yas.shape)
-    np.save("index.npy", yas)
-
-    """filenames.txt contains the names of the audio recordings, so the matching recordings to query is:
-    line in txt = row in npy"""
-    f = open("filenames.txt", "a")
-    f.write(wav_file + "\n")
-    f.close()
+    # stuff = preprocessing.normalize(postprocessed_batch, norm='l2', axis=1)
+    # sum_pooling = np.sum(stuff, axis=0)
+    # new_array = np.array(sum_pooling)[None, :]
+    # final = preprocessing.normalize(new_array, norm='l2', axis=1)
+    #
+    # index_file = np.load(r"/Users/janelabumanglag/FYP/models/research/audioset/samples/index.npy")
+    #
+    # single_append = np.append(index_file, final, axis=0)
+    # np.save(r"/Users/janelabumanglag/FYP/models/research/audioset/samples/index.npy", single_append)
+    #
+    # """filenames.txt contains the names of the audio recordings, so the matching recordings to query is:
+    # line in txt = row in npy"""
+    # f = open(r"/Users/janelabumanglag/FYP/models/research/audioset/samples/filenames.txt", "a")
+    # f.write(wav_file + "\n")
+    # f.close()
 
     # Write the postprocessed embeddings as a SequenceExample, in a similar
     # format as the features released in AudioSet. Each row of the batch of

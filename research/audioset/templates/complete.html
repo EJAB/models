@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DONE</title>
+</head>
+
+<body>
+Uploaded
+
+{% for names in vidname %}
+<div class="container">
+<audio controls>
+    <source src="{{url_for('static', filename=names)}}">
+</audio>
+    <p>"{{url_for('static', filename=names)}}"</p>
+{% endfor %}
+</div>
+<button id="openNav" ><a href="/">Go back to test</a></button>
+
+</body>
+</html>
